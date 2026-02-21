@@ -4,14 +4,7 @@ import { AirQualityData } from "../types";
 import { ApiError } from "../errors/ApiError";
 import { validateCoordinates } from "../utils/validators";
 
-const POLLUTANT_UNITS: Record<string, string> = {
-  pm25: "µg/m³",
-  pm10: "µg/m³",
-  o3: "µg/m³",
-  co: "ppm",
-  so2: "µg/m³",
-  no2: "µg/m³",
-};
+import { mapPollutants } from "../utils/pollutantMapper";
 
 export async function getAirQuality(
   req: Request,
@@ -36,13 +29,7 @@ export async function getAirQuality(
       location: payload.city.name,
       dominantPollutant: payload.dominentpol,
       lastUpdate: payload.time.iso,
-      pollutants: Object.entries(payload.iaqi)
-        .filter(([key]) => key in POLLUTANT_UNITS)
-        .map(([key, data]: [string, any]) => ({
-          id: key,
-          value: data.v,
-          unit: POLLUTANT_UNITS[key],
-        })),
+      pollutants: mapPollutants(payload.iaqi),
       weather: {
         temperature: payload.iaqi.t ? payload.iaqi.t.v : null,
         humidity: payload.iaqi.h ? payload.iaqi.h.v : null,
