@@ -19,10 +19,14 @@ export async function getAirQuality(
     }
 
     const coordinates = validateCoordinates(lat, lon);
+    
+    const start = performance.now();
     const payload = await fetchAirQualityDataFromWaqi(
       coordinates.lat,
       coordinates.lon
     );
+    const end = performance.now();
+    console.log(`[Metrics] WAQI_External_Call overhead: ${(end - start).toFixed(2)} ms`);
 
     const data: AirQualityData = {
       aqi: payload.aqi,

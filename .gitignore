@@ -26,3 +26,5 @@ coverage/
 Thumbs.db
 
 GEMINI.md
+
+docker_stats.log
